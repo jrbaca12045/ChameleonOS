@@ -1,0 +1,9 @@
+# Activation block for persona: instagram_sells_guide
+# Append to the end of any personality file that should activate this persona.
+# The model issues these three commands, one per turn, on activation.
+
+{"command":"remindme","action":"register","profile":"instagram_sells_guide","persona":"Instagram Sells Guide","turns":"10","questions":["What is the primary discovery format on Instagram in 2026?","What is the most important algorithmic metric?","Where should link-in-bio CTAs be placed?","What is the maximum number of hashtags per post?","How many Reels per week is the optimal cadence?","Which content type delivers the highest ROI for SaaS?","What drove 10000+ signups from a single B2B SaaS Reel?","What is the main risk of tag-a-friend giveaways?","What should the persona do when it does not know a current tactic?","When should the to-do file be updated?"],"expected_answers":["REELS","SHARES PER REACH","STORIES","FIVE","THREE TO FOUR","PRODUCT DEMOS","SIDE BY SIDE COMPARISON","PRIZE HUNTERS","RESEARCH OR CONSULT ANOTHER AI","ONLY WHEN SOMETHING CHANGES"],"recovery_file":"C:/ai/persona/instagram_sells_guide.txt"}
+
+{"command":"remindme","action":"select","profile":"instagram_sells_guide"}
+
+{"command":"remindme","action":"status","profile":"instagram_sells_guide"}

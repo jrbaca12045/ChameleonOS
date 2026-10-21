@@ -1,0 +1,129 @@
+Quick Start - mouse_coordinates/
+==================================
+
+For a human who wants to run mouse.py. If you are an agent installing
+this on a user's machine, skip to the Deployment Notes section at the
+bottom.
+
+Step 1 - Confirm Python
+-----------------------
+Open a terminal and check:
+
+    python --version
+
+You should see Python 3.6 or later. If not, install Python 3 from
+https://www.python.org/downloads/ and check "Add Python to PATH"
+during install.
+
+Step 2 - Install pyautogui
+--------------------------
+
+    pip install pyautogui
+
+That is the only pip dependency. Tkinter ships with standard CPython,
+so on Windows and macOS no additional install is needed. On Linux, if
+tkinter is missing, install it from your package manager:
+
+    sudo apt install python3-tk       (Debian / Ubuntu)
+    sudo dnf install python3-tkinter  (Fedora)
+    sudo pacman -S tk                 (Arch)
+
+Step 3 - Run it
+---------------
+From the folder containing mouse.py:
+
+    python mouse.py
+
+A small dark window appears in the top-right corner of the screen with
+a drag handle (::) on the left and coordinates on the right. Move the
+mouse and the numbers update.
+
+Step 4 - Close it
+-----------------
+Click anywhere on the window, or right-click anywhere on the window.
+Both close it. If you dragged the window and want to reset:
+double-click the drag handle.
+
+Step 5 - If something goes wrong
+--------------------------------
+
+"[FAIL] Missing dependency: No module named 'pyautogui'"
+    You skipped Step 2. Run: pip install pyautogui
+
+"No module named 'tkinter'"
+    On Windows/macOS this usually means a minimal Python install. Reinstall
+    Python from python.org and make sure the Tcl/Tk option is checked.
+    On Linux, see the package manager commands in Step 2.
+
+Coordinates show 0,0 and never change
+    On macOS: grant Accessibility permission to the terminal or IDE that
+    is running python. System Settings > Privacy & Security >
+    Accessibility. Add Terminal (or iTerm, or VSCode, whichever launches
+    python). The tool needs permission to read the mouse position.
+
+    On Linux: check that you are in an X11 session, not Wayland. If in
+    doubt:  echo $XDG_SESSION_TYPE  should print "x11". If it prints
+    "wayland" or "tty", the tool cannot read global mouse position and
+    will show 0,0. Log out and choose an X11 session at login.
+
+    On Windows: rarely a problem. If 0,0 persists, check that the script
+    is not running inside a sandboxed environment that blocks input
+    reading.
+
+The window does not appear
+    Check the console output above — the startup banner should print.
+    If the banner prints but no window appears, the window may be
+    opening off-screen. Try moving to a multi-monitor change, or delete
+    the tkinter state. On most systems the corner placement is safe.
+
+----------
+Deployment Notes (for an agent installing this elsewhere)
+----------
+
+This is a standalone interactive tool. It has no dependency on Free
+Agent, no hardcoded paths, no machine-specific constants. An agent
+installing it for a user does not need to edit the script.
+
+1. Verify Python and Tkinter
+   Same as Steps 1 and 2 above. On Linux, if the target user does not
+   already have tkinter, ask them to run one of the package manager
+   commands from Step 2 (or run it yourself with sudo if you have
+   permission and the user has agreed).
+
+2. Install pyautogui
+       pip install pyautogui
+   If pip is restricted, this is the one package that matters.
+
+3. Platform-specific setup
+   macOS: after install, ask the user to grant Accessibility permission
+   to their terminal / IDE. This cannot be done programmatically. It
+   requires the user to open System Settings and enable the toggle.
+   Tell them clearly: "The mouse position tool needs permission to
+   read the cursor. Open System Settings, Privacy & Security,
+   Accessibility, and enable your terminal app."
+
+   Linux: if the user is in a Wayland session, this tool will show 0,0
+   always. Do not install unless you can confirm X11, or discuss
+   switching the login session type with them.
+
+   Windows: no special setup.
+
+4. Place the file
+   Anywhere writable. Reasonable locations:
+     - Inside Free Agent workspace: C:/ai/examples/mouse_coordinates/
+     - The user's Documents folder in a similar subfolder
+     - Any path the user prefers
+
+5. Test after installation
+   Run mouse.py once. If the window appears and coordinates update as
+   the user moves the mouse, the install succeeded. If coordinates
+   stay at 0,0, diagnose platform permission (macOS) or session type
+   (Linux) per Step 5.
+
+6. Tell the user
+   After install, tell the user: "Run mouse.py from any terminal. A
+   small window will show your current mouse position. Useful when
+   you need to know exact coordinates before writing automation. Click
+   the window to close it."
+
+Done. That is the whole setup.

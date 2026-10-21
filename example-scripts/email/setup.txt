@@ -1,0 +1,71 @@
+EMAIL TOOL - SETUP INSTRUCTIONS
+=================================
+
+This folder contains a complete, self-contained Gmail tool: check inbox,
+search emails, and send messages. Nothing is preconfigured -- you supply
+your own credentials.
+
+FILES IN THIS FOLDER
+---------------------
+  gmail_app_pass.py    - the tool (Python script)
+  gmail.json.example   - config template with placeholder values
+  README.txt           - full usage and setup reference
+  setup.txt            - this file
+
+QUICK START
+-----------
+
+1. Make sure Python 3.8+ is installed on this machine.
+   Test: open a command prompt, type: python --version
+
+2. Copy the example config to its working location:
+
+     copy gmail.json.example C:\ai\secrets\gmail.json
+
+   (create the C:\ai\secrets folder if it does not exist)
+
+3. Open C:\ai\secrets\gmail.json in Notepad and replace the two
+   placeholder values:
+
+     {
+       "email": "your.email@gmail.com",
+       "app_password": "your-16-character-app-password"
+     }
+
+4. Generate a Gmail App Password (NOT your normal password):
+
+   a. Enable 2-Step Verification on your Google account.
+   b. Visit https://myaccount.google.com/apppasswords
+   c. Create a new App Password for "Mail".
+   d. Copy the 16-character string into the config file.
+
+5. Test the tool:
+
+     python gmail_app_pass.py --action check --count 3
+
+   You should see the last 3 emails from your inbox.
+
+USAGE EXAMPLES
+--------------
+
+  Check last 10 emails:
+    python gmail_app_pass.py --action check
+
+  Check last 5 emails:
+    python gmail_app_pass.py --action check --count 5
+
+  Search for a keyword:
+    python gmail_app_pass.py --action check --search "invoice"
+
+  Send an email:
+    python gmail_app_pass.py --action send --to someone@example.com --subject "Hi" --body "Hello!"
+
+WHERE THIS FITS IN FREE AGENT
+------------------------------
+
+Free Agent's automation_run can call this tool by name if it is placed
+in C:\ai\ and registered in the automation inventory. But this folder
+is a standalone distribution -- you can run the script directly from a
+command prompt without any Free Agent setup.
+
+The script has no dependencies beyond Python's standard library.

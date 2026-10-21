@@ -1,0 +1,150 @@
+Quick Start - voice_switching/
+================================
+
+For a human who wants to run the voice switching examples on a machine
+that already has Free Agent installed. If you are an agent installing
+this on a user's machine, skip to the Deployment Notes section at the
+bottom.
+
+Step 1 - Confirm Free Agent is installed
+----------------------------------------
+Open a terminal and check for the two scripts this pair depends on:
+
+    dir C:\ai\automation\core\desk_executor_seq.py
+    dir C:\ai\automation\core\desktop_scanner_optimized.py
+
+If either is missing, the pair will not run. Free Agent is not installed
+or is installed in a non-standard location. If the location is different,
+see Deployment Notes below.
+
+Step 2 - Open Speechma in Firefox
+----------------------------------
+Launch Firefox. Navigate to speechma.com. Log in if required. Navigate
+to the page where the voice list appears (the voice picker on the TTS
+generation page is the usual target).
+
+Maximise the Firefox window. Do not move it. The scripts assume the
+window fills the screen at 1920x1080 or larger.
+
+Step 3 - List available voices
+------------------------------
+In a terminal, from the folder containing these files:
+
+    python list_voices.py
+
+Expected output:
+
+    [START] Listing voices with explicit scroll
+      Scroll to top (5 clicks)...
+      done
+      Click lower scroll...
+      done
+      Click further down (3 clicks)...
+      done
+    [SCAN] Running fast scan...
+    Found N voice names:
+      1. <voice>
+      2. <voice>
+      ...
+    [DONE]
+
+If you see "No voice names found." the scan ran but did not find any
+labels matching the filter. Likely causes: Speechma layout changed, or
+the scroll coordinates are wrong for your screen. See Deployment Notes.
+
+Step 4 - Select a voice
+-----------------------
+Pick a voice name from Step 3. Then:
+
+    python select_voice.py "Andrew Multilingual"
+
+Expected output:
+
+    [SELECT] Selecting voice: Andrew Multilingual
+      Scroll to top (5 clicks)...
+      done
+      Click lower scroll...
+      done
+      Click further down (3 clicks)...
+      done
+      Scanning for voice label...
+      Found at (x, y)
+      Voice selected successfully
+    [DONE] Voice selection complete.
+
+If you see "Voice not found in scan" the name did not match exactly.
+Names are matched case-insensitively but must match otherwise, including
+spaces and punctuation.
+
+Step 5 - If anything fails
+--------------------------
+
+"command not found: python"
+    Python is not on your PATH. Reinstall Python 3 and check "Add Python
+to PATH" during install, or call it as "py" on Windows.
+
+"Scan failed"
+    desk_executor_seq.py or desktop_scanner_optimized.py could not run.
+    Usually means the path in the constants block is wrong, or the
+    Free Agent automation tree is missing.
+
+"Voice not found in scan" but the voice is clearly visible
+    The scan did not return a label whose text exactly matches what
+    you passed. Possible causes: the label is drawn inside an image
+    rather than as accessible text, or your scan target window is
+    wrong (the browser may not be focused).
+
+Wrong clicks going to wrong places
+    The scroll coordinates are wrong for your screen resolution. See
+    Deployment Notes below.
+
+----------
+Deployment Notes (for an agent installing this elsewhere)
+----------
+
+Target user already has Free Agent, wants the voice switching examples
+available to run. Your job is to adjust the constants for their machine
+and place the files somewhere reasonable.
+
+1. Verify Free Agent install path
+   The scripts expect C:/ai/automation/core/... and C:/ai/ temp files.
+   If Free Agent is installed at a different path, edit both scripts:
+     - DESK_EXECUTOR
+     - DESK_SCANNER
+     - TEMP_SEQ, VERIFY_SCAN, OUTPUT_SCAN (in list_voices.py)
+     - TEMP_SEQ, VERIFY_SCAN, SELECT_SCAN, CLICK_SEQ (in select_voice.py)
+   Replace 'C:/ai' with the user's actual install path.
+
+2. Verify the browser target
+   BROWSER_TARGET is 'firefox.exe,SPEECHMA'. If the user uses Chrome or
+   Edge for Speechma, replace 'firefox.exe' with the process name of
+   their browser. The ',SPEECHMA' suffix is a title filter.
+
+3. Verify the scroll coordinates
+   SCROLL_TOP, SCROLL_DOWN_1, SCROLL_DOWN_2 assume 1920x1080. On a
+   different resolution, ask the user to open Speechma with voices
+   visible and take a screenshot, then measure the scrollbar positions
+   and update the three constants in both files.
+
+4. Verify the voice-area bounds (list_voices.py only)
+   VOICE_AREA_Y_MIN = 300, VOICE_AREA_Y_MAX = 800 are the vertical
+   range where voice labels are expected. Adjust if the user's page
+   layout puts the voice list elsewhere.
+
+5. Place the files
+   Reasonable locations, in order of preference:
+     - Inside Free Agent's workspace: C:/ai/examples/voice_switching/
+     - The user's Documents folder under a similar subfolder
+     - Any path the user prefers, as long as they know where it is
+
+6. Test after installation
+   Run list_voices.py once. If it produces a voice list, the constants
+   are correct. If it produces "No voice names found.", revisit steps
+   3 and 4.
+
+7. Tell the user
+   After install, tell the user: "The voice switching examples are at
+   <path>. To list voices run list_voices.py. To select a voice run
+   select_voice.py with the voice name as an argument."
+
+Done. That is the whole setup.

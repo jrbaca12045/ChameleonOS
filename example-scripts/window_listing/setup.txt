@@ -1,0 +1,113 @@
+Quick Start - window_listing/
+================================
+
+For a human who wants to run winlist.py on a Windows machine. If you
+are an agent installing this on a user's machine, skip to the
+Deployment Notes section at the bottom.
+
+Step 1 - Confirm Python
+-----------------------
+Open a terminal and check:
+
+    python --version
+
+You should see Python 3.6 or later. If not, install Python 3 from
+https://www.python.org/downloads/windows/ and check "Add Python to
+PATH" during install.
+
+Step 2 - Install dependencies
+-----------------------------
+winlist.py needs two packages. From a terminal:
+
+    pip install pywinauto psutil
+
+That is the entire install. Both packages are pip-only, no build
+steps, no additional toolkits required.
+
+Step 3 - Run it
+---------------
+From the folder containing winlist.py:
+
+    python winlist.py
+
+Expected output:
+
+    PID      | Process Name         | Window Title
+    ------------------------------------------------------------
+    1234     | firefox              | Google - Mozilla Firefox
+    5678     | Code                 | Visual Studio Code
+    9012     | chrome               | New Tab - Google Chrome
+    ...
+
+Every visible window on the desktop appears as one row. The script
+excludes itself from the output, so you will not see a row for python.exe
+running winlist.py.
+
+Step 4 - Use the output for automation (optional)
+-------------------------------------------------
+If you are about to write automation for a specific app, run winlist.py
+while that app is open. Find its row. The Process Name column tells you
+the exact process name to target (for example, "firefox" or
+"WindowsTerminal"). Use that name in your automation tool's target
+parameter.
+
+Step 5 - If something goes wrong
+--------------------------------
+
+"[FAIL] Missing dependency: No module named 'pywinauto'"
+    You skipped Step 2. Run: pip install pywinauto psutil
+
+"[FAIL] Missing dependency: No module named 'psutil'"
+    Same fix: pip install pywinauto psutil
+
+Empty output, or only one or two windows listed
+    pywinauto's UIA backend may not see everything if the app uses an
+    unusual accessibility provider. Try running as administrator if
+    the target app requires elevation to enumerate.
+
+"pywinauto.uia_defines.NoSpecElementError"
+    A window handle went stale between enumeration and access. Usually
+    transient. Run again.
+
+Non-ASCII titles look like empty strings
+    That is by design. Titles containing characters outside ASCII are
+    stripped to their ASCII subset so they print cleanly on any
+    Windows console. See README.txt, Limitations.
+
+----------
+Deployment Notes (for an agent installing this elsewhere)
+----------
+
+This is a standalone tool. It has no dependency on Free Agent being
+installed, no hardcoded paths, no machine-specific constants. An agent
+installing it for a user does not need to edit the script.
+
+1. Verify Windows
+   This tool is Windows-only. If the target machine is macOS or Linux,
+   do not install it. Suggest a different tool for those platforms.
+
+2. Install dependencies
+   If pip is available:
+       pip install pywinauto psutil
+   If the user is in a corporate environment with restricted pip,
+   they may need their IT admin to approve these packages.
+
+3. Place the file
+   Anywhere writable. Reasonable locations:
+     - Inside Free Agent workspace: C:/ai/examples/window_listing/
+     - The user's Documents folder in a similar subfolder
+     - Any path the user prefers
+
+4. Test after installation
+   Run once. If it prints a table with rows, it is working. If it
+   prints nothing, the target machine may be running an unusual window
+   manager or accessibility provider. Diagnose by running with elevated
+   permissions.
+
+5. Tell the user
+   After install, tell the user: "Run winlist.py to see every visible
+   window and the process name that owns it. This is useful before
+   writing any desktop automation, because it gives you the exact
+   process name to target."
+
+Done. That is the whole setup.

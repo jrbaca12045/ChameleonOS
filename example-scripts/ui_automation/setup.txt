@@ -1,0 +1,156 @@
+Quick Start - ui_automation/
+================================
+
+For a human who wants to run the three UI automation scripts. If you
+are an agent installing this on a user's machine, skip to the
+Deployment Notes section at the bottom.
+
+Step 1 - Confirm Windows and Python
+-----------------------------------
+These scripts are Windows-only. If you are on macOS or Linux, stop
+here. pywinauto relies on Windows UI Automation.
+
+Open a terminal and check:
+
+    python --version
+
+You should see Python 3.6 or later. If not, install Python 3 from
+https://www.python.org/downloads/windows/ and check "Add Python to
+PATH" during install.
+
+Step 2 - Install pywinauto
+--------------------------
+
+    pip install pywinauto
+
+That is the only dependency. No psutil needed for these three scripts.
+
+Step 3 - Test on Notepad
+------------------------
+Open Notepad (press Win+R, type notepad, press Enter). Do not close it.
+
+In a terminal, from the folder containing the three scripts:
+
+    python ui_inspect.py "Untitled - Notepad"
+
+You should see JSON output. The controls array will include entries
+like {"type": "Edit", "name": "Text editor", "auto_id": "15"}.
+If you see that, ui_inspect works.
+
+    python ui_wait.py "Untitled - Notepad" 15 enabled
+
+You should see {"status": "success", ...} within a second or so.
+If you see {"status": "timeout", ...}, the control was not found in
+the expected state. Check that Notepad is actually open and its title
+matches.
+
+    python ui_action.py "Untitled - Notepad" type 15 "hello"
+
+Notepad's text area should now contain the word hello.
+
+    python ui_action.py "Untitled - Notepad" get_text 15
+
+You should see {"status": "success", "text": "hello"}.
+
+If all four steps succeed on Notepad, the scripts are ready for real
+use. If any step fails, see Step 5 below.
+
+Step 4 - Adapt to your own target
+---------------------------------
+The Notepad example is a scaffold. To use the scripts on your own app:
+
+  1. Open the app you want to automate.
+  2. Run ui_inspect.py with the app's title or PID.
+  3. Look through the controls array in the output. Find the entry
+     that matches the thing you want to click or type into. Note its
+     auto_id (preferred) or name.
+  4. Use ui_wait.py to wait for that control to be ready.
+  5. Use ui_action.py to click it, type into it, or read it.
+
+The workflow is exactly the same for every app. Only the target title
+and the control id change.
+
+Step 5 - If something goes wrong
+--------------------------------
+
+"[FAIL] Missing dependency: No module named 'pywinauto'"
+    pip install pywinauto
+
+"App not found" or "Process not found"
+    The window title or PID does not match any open window. Check:
+    - Is the app actually running?
+    - Does the title match exactly (case-insensitive substring)?
+    - If using a PID, did the app restart and get a new PID? Re-run
+      winlist.py (from the window_listing cluster) to see the current
+      PID.
+
+"Control 'X' not found"
+    The control id you passed does not exist in the window's tree.
+    Run ui_inspect.py on the window to see what controls actually
+exist and what their auto_ids are.
+
+"timeout" from ui_wait
+    The control exists, but did not reach the requested state in time.
+    Either the app is slow, the condition is wrong (for example,
+    waiting for 'enabled' on a control that is permanently disabled),
+    or the control is behind a dialog the app has not closed yet.
+
+Clicks go to the wrong place, or typing goes nowhere
+    The control found may not be the control you meant. The auto_id
+    lookup is preferred because it is unique. If auto_id is empty and
+    a name match picked the wrong element, use a more specific regex
+    as the control_id, or inspect the tree deeper to find a better
+    identifier.
+
+Multi-window apps behave oddly
+    app.top_window() picks the topmost window of the process. For
+    multi-window apps you may want to pass a title substring instead
+    of a PID, or extend the scripts to target a specific child window
+    by class or auto_id.
+
+----------
+Deployment Notes (for an agent installing this elsewhere)
+----------
+
+These are standalone tools. They have no dependency on Free Agent, no
+hardcoded paths, no machine-specific constants. An agent installing
+them does not need to edit any of the three scripts.
+
+1. Verify Windows
+   These scripts are Windows-only. If the target is macOS or Linux,
+   do not install them. Suggest the user find native automation tools
+   for that platform.
+
+2. Install pywinauto
+       pip install pywinauto
+   If pip is restricted in the user's environment, they may need
+   corporate IT approval.
+
+3. Place the files
+   All three scripts must go in the same folder (they do not import
+   each other, but they form a unit and the README describes them
+   together). Reasonable locations:
+     - Inside Free Agent workspace: C:/ai/examples/ui_automation/
+     - The user's Documents folder in a similar subfolder
+     - Any path the user prefers, as long as all three stay together
+
+4. Test after installation
+   Run the Notepad test from Steps 3 above. If all four commands
+   succeed, the install is working. If any fail, check the error
+   output against the troubleshooting section, then report to the
+   user what failed.
+
+5. Tell the user
+   After install, tell the user: "The UI automation scripts are at
+   <path>. Run ui_inspect.py with an app's title to see its controls.
+   Then use ui_wait.py to wait for a control, and ui_action.py to
+   click or type into it. The README has a worked example using
+   Notepad that you can copy and adapt."
+
+6. Note the pair with window_listing
+   If the user also has the window_listing/ cluster, mention that
+   winlist.py shows every open window on the desktop. It is the
+   natural first step before ui_inspect.py when the user does not
+   know what window they want to automate.
+
+Done. That is the whole setup.

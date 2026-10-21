@@ -1,0 +1,70 @@
+Quick Start - check_disk_space.py
+================================
+
+This tool needs Python 3 and nothing else. Five minutes from zero
+to running.
+
+Step 1 - Get Python (skip if already installed)
+-----------------------------------------------
+Open a terminal and type:
+    python --version
+
+If you see "Python 3.x.x" you are ready. If you see an error or
+"Python 2.x", install Python 3:
+
+    Windows:   https://www.python.org/downloads/windows/
+               During install, check "Add Python to PATH".
+    macOS:     https://www.python.org/downloads/macos/
+               Or: brew install python
+    Linux:     Usually preinstalled. If not: sudo apt install python3
+
+Step 2 - Get the file
+---------------------
+Copy check_disk_space.py into any folder you like. No other files
+are needed. The tool has no config, no dependencies, no data files.
+
+Step 3 - Run it
+---------------
+Open a terminal in the folder where the file lives. Then:
+
+    python check_disk_space.py
+
+You should see output like:
+    ----------
+    [OK] C:/ Usage: 63.4%
+         Free: 182.3 GB of 498.1 GB
+    [OK] C:/ is operating within normal parameters.
+    ----------
+
+Step 4 - Try a different drive (optional)
+-----------------------------------------
+    python check_disk_space.py D:/
+    python check_disk_space.py /home
+
+If the path does not exist you get an error and exit code 1.
+
+Step 5 - Schedule a daily check (optional, Windows)
+----------------------------------------------------
+Open Task Scheduler. Create Basic Task. Trigger: Daily. Action:
+Start a program. Program: python. Arguments:
+    "C:/path/to/check_disk_space.py"
+
+Set it to run at a time you will not be using the machine.
+
+Troubleshooting
+---------------
+"python: command not found"
+    Python is not on your PATH. Reinstall Python and check
+    "Add Python to PATH", or call it as "py" (Windows) or
+    "python3" (Linux/macOS).
+
+"[FAIL] Cannot read path"
+    The path does not exist, is not mounted, or you lack
+    permission. Check the drive letter or path.
+
+Unicode or garbled output on old Windows consoles
+    The script sets UTF-8 on stdout. If your console is very
+    old, run it in Windows Terminal or PowerShell instead of
+    the legacy Command Prompt.
+
+Done. That is the whole setup.

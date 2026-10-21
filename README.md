@@ -1,10 +1,10 @@
 # ChameleonOS
 
-The free library behind **ChameleonOS** - the operating system for web chats.
+Most AI agents are locked to one provider, one API, one bill.
 
-ChameleonOS turns any web chat into something that can actually operate your Windows PC. This repository holds the parts of the project that are free to read, copy, and use: the skills, the example scripts, and the persona definitions.
+This repository is the free library for one that is not. Skills, working scripts, and persona definitions - all plain text, all readable, none of it requiring an install.
 
-The app itself is distributed through the Microsoft Store. This repo is the library, not the installer.
+It is the library behind ChameleonOS, a Windows agent that can use the AI accounts you already have instead of a paid API. The app itself is on the Microsoft Store. This repo is everything else.
 
 ## What is here
 
